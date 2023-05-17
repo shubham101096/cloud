@@ -5,23 +5,16 @@ import pandas as pd
 app = Flask(__name__)
 
 
-@app.route('/')
-def hello_world():
-    return 'Hello World!'
-
-
 @app.route('/calculate', methods=['POST'])
-def calculate_sum():
-    return {"yo":"hu"}
+def calculate():
     input_data = request.json
     if "file" in input_data and input_data["file"] is not None:
         file = input_data["file"]
         product = input_data["product"]
-        # file = "docker_csv_data.dat"
-        # product = "wheat"
-        if os.path.isfile(file):
+        file_path = "host_vol/"+file
+        if os.path.isfile(file_path):
             try:
-                df = pd.read_csv(file)
+                df = pd.read_csv(file_path)
             except:
                 return {"file": file, "error": "Input file not in CSV format."}
 

@@ -1,20 +1,18 @@
 version: "3"
 services:
   flask1:
-    image: shubhammishra10/flask1v1
+    image: shubhammishra10/flask1
     container_name: flask1
-#    environment:
-#      - discovery.type=single-node
     ports:
       - 6000:6000
     volumes:
-      - ./flask1:/app
+      - .:/usr/src/app/host_vol
   flask2:
-    image: shubhammishra10/flask2v1
+    image: shubhammishra10/flask2
     container_name: flask2
     ports:
       - 6003:6003
     volumes:
-      - ./flask2:/app
+      - .:/usr/src/app/host_vol
 #volumes:
-#  - ./:/app
+#  shared_volume:
