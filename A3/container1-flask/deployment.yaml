@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: container1-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: container1-app
+  template:
+    metadata:
+      labels:
+        app: container1-app
+    spec:
+      containers:
+        - name: container1
+          image: us-central1-docker.pkg.dev/cloud-5409/cloud-a3-artifact-repo/container1-img
+          volumeMounts:
+            - name: cloud-a3-volume
+              mountPath: /shubham_PV_dir
+          ports:
+            - containerPort: 6000
+      volumes:
+        - name: cloud-a3-volume
+          persistentVolumeClaim:
+            claimName: cloud-a3-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: container1-service
+spec:
+  selector:
+    app: container1-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 6000
+  type: LoadBalancer
+
+

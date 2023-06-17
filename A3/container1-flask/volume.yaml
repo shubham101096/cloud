@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: cloud-a3-pv
+  labels:
+    pv-name: cloud-a3-pv
+spec:
+  capacity:
+    storage: 10Gi
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
+  gcePersistentDisk:
+    pdName: cloud-5409-a3-gke-persistent-disk
+    fsType: ext4
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cloud-a3-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: standard
+  selector:
+    matchLabels:
+      pv-name: cloud-a3-pv
