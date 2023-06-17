@@ -1,0 +1,15 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/cloud-5409/cloud-a3-artifact-repo/container2-img', '.']
+  - name: 'gcr.io/cloud-builders/kubectl'
+    env: ['CLOUDSDK_COMPUTE_REGION=us-central1', 'CLOUDSDK_CONTAINER_CLUSTER=cloud-5409-a3-gke-cluster']
+    args: [ 'apply', '-f', 'volume.yaml' ]
+  - name: 'gcr.io/cloud-builders/kubectl'
+    env: [ 'CLOUDSDK_COMPUTE_REGION=us-central1', 'CLOUDSDK_CONTAINER_CLUSTER=cloud-5409-a3-gke-cluster' ]
+    args: [ 'delete', 'deployment', 'container2-deployment', '--ignore-not-found' ]
+  - name: 'gcr.io/cloud-builders/kubectl'
+    env: ['CLOUDSDK_COMPUTE_REGION=us-central1', 'CLOUDSDK_CONTAINER_CLUSTER=cloud-5409-a3-gke-cluster']
+    args: [ 'apply', '-f', 'deployment.yaml' ]
+images:
+  - 'us-central1-docker.pkg.dev/cloud-5409/cloud-a3-artifact-repo/container2-img'
+
