@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  BeanstalkApplication:
+    Type: "AWS::ElasticBeanstalk::Application"
+    Properties:
+      ApplicationName: EBS-T1
+      Description: "AWS Elastic Beanstalk Application"
+  BeanstalkApplicationVersion:
+    Type: "AWS::ElasticBeanstalk::ApplicationVersion"
+    Properties:
+      ApplicationName: !Ref BeanstalkApplication
+      Description: "Application Version 1.0"
+      SourceBundle:
+        S3Bucket: elasticbeanstalk-us-east-1-205053501838
+        S3Key: 1687984761430-Archive.zip
+  BeanstalkEnvironment:
+    Type: "AWS::ElasticBeanstalk::Environment"
+    Properties:
+      ApplicationName: !Ref BeanstalkApplication
+      Description: "Elastic Beanstalk Environment"
+      VersionLabel: !Ref BeanstalkApplicationVersion
+      SolutionStackName: "64bit Amazon Linux 2 v5.8.2 running Node.js 18"
+      OptionSettings:
+        - Namespace: aws:elasticbeanstalk:environment
+          OptionName: EnvironmentType
+          Value: "SingleInstance"
+        - Namespace: aws:elasticbeanstalk:environment
+          OptionName: ServiceRole
+          Value: !Sub "arn:aws:iam::${AWS::AccountId}:role/LabRole"
+        - Namespace: aws:autoscaling:launchconfiguration
+          OptionName: IamInstanceProfile
+          Value: !Sub "arn:aws:iam::${AWS::AccountId}:instance-profile/LabInstanceProfile"
+
+Outputs:
+  EnvironmentURL:
+    Description: "URL of the Elastic Beanstalk Environment"
+    Value: !Sub "http://${BeanstalkEnvironment.EndpointURL}"
