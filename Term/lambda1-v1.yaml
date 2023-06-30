@@ -1,0 +1,12 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  LambdaFunction:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      FunctionName: lambda1
+      Runtime: nodejs14.x
+      Handler: lambda1.handler
+      Code:
+        S3Bucket: cloud-term-bucket
+        S3Key: lambda1.zip
+      Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/LabRole"

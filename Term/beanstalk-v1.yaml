@@ -11,8 +11,8 @@ Resources:
       ApplicationName: !Ref BeanstalkApplication
       Description: "Application Version 1.0"
       SourceBundle:
-        S3Bucket: elasticbeanstalk-us-east-1-205053501838
-        S3Key: 1687984761430-Archive.zip
+        S3Bucket: cloud-term-bucket
+        S3Key: frontend.zip
   BeanstalkEnvironment:
     Type: "AWS::ElasticBeanstalk::Environment"
     Properties:
@@ -30,6 +30,16 @@ Resources:
         - Namespace: aws:autoscaling:launchconfiguration
           OptionName: IamInstanceProfile
           Value: !Sub "arn:aws:iam::${AWS::AccountId}:instance-profile/LabInstanceProfile"
+  LambdaFunction:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      FunctionName: MyLambdaFunction
+      Runtime: nodejs14.x
+      Handler: lambda1.handler
+      Code:
+        S3Bucket: cloud-term-bucket
+        S3Key: lambda1.zip
+      Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/LabRole"
 
 Outputs:
   EnvironmentURL:
