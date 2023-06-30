@@ -1,6 +1,7 @@
 AWSTemplateFormatVersion: "2010-09-09"
+
 Resources:
-  LambdaFunction:
+  LambdaFunction1:
     Type: "AWS::Lambda::Function"
     Properties:
       FunctionName: lambda1
@@ -10,3 +11,40 @@ Resources:
         S3Bucket: cloud-term-bucket
         S3Key: lambda1.zip
       Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/LabRole"
+
+  ApiGatewayRestApi:
+    Type: "AWS::ApiGateway::RestApi"
+    Properties:
+      Name: LambdaAPI
+
+  ApiGatewayResource1:
+    Type: "AWS::ApiGateway::Resource"
+    Properties:
+      RestApiId: !Ref ApiGatewayRestApi
+      ParentId: !GetAtt ApiGatewayRestApi.RootResourceId
+      PathPart: "lambda1"
+
+  ApiGatewayMethod1:
+    Type: "AWS::ApiGateway::Method"
+    Properties:
+      RestApiId: !Ref ApiGatewayRestApi
+      ResourceId: !Ref ApiGatewayResource1
+      HttpMethod: "GET"
+      AuthorizationType: "NONE"
+      Integration:
+        Type: "AWS_PROXY"
+        IntegrationHttpMethod: "POST"
+        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction1.Arn}/invocations"
+  
+  ApiGatewayPermission:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      FunctionName: !GetAtt LambdaFunction1.Arn
+      Action: "lambda:InvokeFunction"
+      Principal: "apigateway.amazonaws.com"
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGatewayRestApi}/*/*/*"
+
+Outputs:
+  ApiGatewayEndpoint:
+    Description: "Endpoint URL of the API Gateway"
+    Value: !Sub "https://${ApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com"
