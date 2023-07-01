@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import AWS from "aws-sdk";
 import { useNavigate } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
-const cors = require('cors')
 
 
 const AWS_CONFIG = {
@@ -21,10 +20,17 @@ const Landing = () => {
 
   const callLambdaFunction = async () => {
     try {
-        const response = await fetch('https://c53mql1r37.execute-api.us-east-1.amazonaws.com/prod/lambda1');
+        const requestBody = {
+            id: '123',
+            data: 'example data',
+          };
+        const response = await fetch('https://mr8ujssvbe.execute-api.us-east-1.amazonaws.com/prod/lambda1', {
+            method: 'POST',
+            body: JSON.stringify(requestBody),
+          });
         const data = await response.json();
         console.log(data)
-        setResponse(data.message);
+        setResponse(data);
       } catch (error) {
         console.error(error);
       }

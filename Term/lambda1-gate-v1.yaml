@@ -16,6 +16,9 @@ Resources:
     Type: "AWS::ApiGateway::RestApi"
     Properties:
       Name: LambdaAPI
+      EndpointConfiguration:
+        Types: 
+          - "REGIONAL"
 
   ApiGatewayResource1:
     Type: "AWS::ApiGateway::Resource"
@@ -29,13 +32,17 @@ Resources:
     Properties:
       RestApiId: !Ref ApiGatewayRestApi
       ResourceId: !Ref ApiGatewayResource1
-      HttpMethod: "GET"
+      HttpMethod: "POST"
       AuthorizationType: "NONE"
       Integration:
         Type: "AWS_PROXY"
         IntegrationHttpMethod: "POST"
         Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction1.Arn}/invocations"
-  
+      MethodResponses:
+        - StatusCode: "200"
+          ResponseModels:
+            application/json: "Empty"
+
   ApiGatewayPermission:
     Type: "AWS::Lambda::Permission"
     Properties:
@@ -44,9 +51,53 @@ Resources:
       Principal: "apigateway.amazonaws.com"
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGatewayRestApi}/*/*/*"
 
+  LambdaFunctionTextract:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      FunctionName: textract
+      Runtime: nodejs14.x
+      Handler: textract.handler
+      Code:
+        S3Bucket: cloud-term-bucket
+        S3Key: textract.zip
+      Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/LabRole"
+
+  ApiGatewayResourceTextract:
+    Type: "AWS::ApiGateway::Resource"
+    Properties:
+      RestApiId: !Ref ApiGatewayRestApi
+      ParentId: !GetAtt ApiGatewayRestApi.RootResourceId
+      PathPart: "textract"
+
+  ApiGatewayMethodTextract:
+    Type: "AWS::ApiGateway::Method"
+    Properties:
+      RestApiId: !Ref ApiGatewayRestApi
+      ResourceId: !Ref ApiGatewayResourceTextract
+      HttpMethod: "POST"
+      AuthorizationType: "NONE"
+      Integration:
+        Type: "AWS_PROXY"
+        IntegrationHttpMethod: "POST"
+        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunctionTextract.Arn}/invocations"
+      MethodResponses:
+        - StatusCode: "200"
+          ResponseModels:
+            application/json: "Empty"
+
+  ApiGatewayPermissionTextract:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      FunctionName: !GetAtt LambdaFunctionTextract.Arn
+      Action: "lambda:InvokeFunction"
+      Principal: "apigateway.amazonaws.com"
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGatewayRestApi}/*/*/*"
+
   ApiGatewayDeployment:
     Type: "AWS::ApiGateway::Deployment"
-    DependsOn: ApiGatewayMethod1
+    DependsOn:
+      - ApiGatewayMethod1
+      - ApiGatewayMethodTextract
     Properties:
       RestApiId: !Ref ApiGatewayRestApi
 
@@ -56,6 +107,8 @@ Resources:
       RestApiId: !Ref ApiGatewayRestApi
       StageName: "prod"
       DeploymentId: !Ref ApiGatewayDeployment
+
+  
 
 Outputs:
   ApiGatewayEndpoint:

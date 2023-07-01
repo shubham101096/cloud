@@ -1,5 +1,5 @@
 {
-  "name": "lambda1",
+  "name": "textract",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,7 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.1409.0",
-    "cors": "^2.8.5"
+    "aws-sdk": "^2.1409.0"
   }
 }
