@@ -2,50 +2,48 @@ const AWS = require('aws-sdk');
 const textract = new AWS.Textract();
 
 exports.handler = async (event) => {
-    return {
-        statusCode: 200,
-        headers: {
-            "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Credentials": true, 
-        },
-        body: JSON.stringify( "hello" ),
-      };
   try {
-    const { image } = JSON.parse(event.body);
+    if ('image' in event) {
+      const imageBytes = Buffer.from(event.image, 'base64');
+      const image = { Bytes: imageBytes };
+      
+      const params = {
+        Document: image,
+      };
+      
+      const response = await textract.detectDocumentText(params).promise();
+      const blocks = response.Blocks;
+      let extractedText = '';
 
-    const imageBuffer = Buffer.from(image, 'base64');
-
-    const params = {
-      Document: {
-        Bytes: imageBuffer,
-      },
+      for (const block of blocks) {
+        if (block.BlockType === 'LINE') {
+          extractedText += block.Text + ' ';
+        }
+      }
+      
+      const lambdaResponse = {
+        statusCode: 200,
+        body: extractedText.trim(),
+      };
+      
+      
+      return lambdaResponse;
+    } else {
+      throw new Error('Invalid image.');
+    }
+  } catch (err) {
+    let error_message = "Failed to extract image. ";
+    if (err.response && err.response.Error && err.response.Error.Message) {
+      error_message += err.response.Error.Message;
+    } else {
+      error_message += err.message;
+    }
+    
+    const lambdaResponse = {
+      statusCode: 400,
+      body: error_message,
     };
-
-    const textractResult = await textract.detectDocumentText(params).promise();
-
-    const extractedText = textractResult.Blocks
-      .filter(block => block.BlockType === 'LINE')
-      .map(block => block.Text)
-      .join(' ');
-
-    return {
-      statusCode: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Credentials": true, 
-      },
-      body: JSON.stringify({ text: extractedText }),
-    };
-  } catch (error) {
-    console.error('Error:', error);
-    return {
-      statusCode: 500,
-      headers: {
-        "Access-Control-Allow-Origin": "*", 
-        "Access-Control-Allow-Credentials": true, 
-      },
-      body: JSON.stringify({ message: 'Error extracting text' }),
-    };
+    
+    return lambdaResponse;
   }
 };
