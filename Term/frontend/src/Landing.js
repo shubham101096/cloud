@@ -17,11 +17,6 @@ const LandingPage = () => {
     <Container>
       <Row className="mt-5">
         <Col>
-          <h1>ImageAnalyser</h1>
-        </Col>
-      </Row>
-      <Row className="mt-5">
-        <Col>
           <Button variant="primary" size="lg" className="mr-3" onClick={handleRegister}>
             Register
           </Button>

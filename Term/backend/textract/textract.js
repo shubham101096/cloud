@@ -15,15 +15,14 @@ exports.handler = async (event) => {
       const blocks = response.Blocks;
       let extractedText = '';
 
-      for (const block of blocks) {
-        if (block.BlockType === 'LINE') {
-          extractedText += block.Text + ' ';
-        }
-      }
+      let combinedText = blocks
+      .filter((block) => block.BlockType === 'LINE')
+      .map((block) => block.Text)
+      .join('\n');
       
       const lambdaResponse = {
         statusCode: 200,
-        body: extractedText.trim(),
+        body: combinedText.trim(),
       };
       
       
