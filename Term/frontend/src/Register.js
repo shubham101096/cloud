@@ -55,6 +55,9 @@ const Register = () => {
     if (!confirmPassword) {
       errors.push("Confirm Password is required");
     }
+    if (password.length < 6) {
+        errors.push("Password should be at least 6 characters long");
+    }
 
     if (errors.length > 0) {
       setErrorMessages(errors);

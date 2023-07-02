@@ -4,16 +4,15 @@ import { useNavigate } from "react-router-dom";
 import AWS from "aws-sdk";
 
 const AWS_CONFIG = {
-  region: "us-east-1",
-  accessKeyId: "ASIAS7PREEGHBVLEDJTL",
-  secretAccessKey: "D7Pi9cwFJJKrp2+YH0X/oJrSnATfnxPOf9N1cgh7",
-  sessionToken:
-    "FwoGZXIvYXdzEH0aDLh1WJLdRWx9v1onoiLAAVD0f8fATpc70PktArUvEbEuofZiDMsM4CiqdQ8zG/t0xptthv93BjhaTj7MUfe5+a/GM+OSZaxQfooexQjWijiTjFal7mpDBo48rZXCo9gWHtyKKMg4K1/Uh3jAIAXTA1zKZoym2Xj/F/zBvREr2N8oWCo86XfJQXYISNK26nvT8lowuKDeVItwTYUWvQippsKIwtHdjyPLULE1FvctBnQy/mKPqjB1bo1tmnNxxsI2OV9n3cls9p5NhRyejhkTPCiFz4WlBjItfYgB24D7Fu+RGWNWxWb6CCliFSqNCuAAYcTtztw31SlVXPWtivdtpwCWmGUZ",
-};
-
-AWS.config.update(AWS_CONFIG);
-
-const lambda = new AWS.Lambda({ region: "us-east-1" });
+    "region": process.env.REACT_APP_AWS_REGION,
+    "accessKeyId": process.env.REACT_APP_AWS_ACCESS_KEY,
+    "secretAccessKey": process.env.REACT_APP_AWS_SECRET_KEY,
+    "sessionToken": process.env.REACT_APP_AWS_SESSION_TOKEN,
+  };
+  
+  AWS.config.update(AWS_CONFIG);
+  
+  const lambda = new AWS.Lambda({ region: process.env.REACT_APP_AWS_REGION });
 
 const Login = () => {
   const navigate = useNavigate();
@@ -56,6 +55,7 @@ const Login = () => {
 
       if (isLoginSuccess) {
         setLoginStatus("Login successful");
+        localStorage.setItem('email', email);
         navigate("/analyser");
       } else {
         if (parsedResponse.userExists) {
