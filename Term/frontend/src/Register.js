@@ -68,14 +68,12 @@ const Register = () => {
       };
 
       const response = await lambda.invoke(params).promise();
-      console.log("response.Payload.registered", response.Payload.registered);
 
       const parsedResponse = JSON.parse(JSON.parse(response.Payload).body);
       const isRegistered = parsedResponse.registered;
 
-      //   if (response.Payload.body.registered) {
       if (isRegistered) {
-        setRegistrationStatus("Already registered");
+        setRegistrationStatus("Email already registered");
       } else {
         setRegistrationStatus("Registration successful");
       }
