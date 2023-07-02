@@ -22,24 +22,11 @@ Resources:
       SolutionStackName: "64bit Amazon Linux 2 v5.8.2 running Node.js 18"
       OptionSettings:
         - Namespace: aws:elasticbeanstalk:environment
-          OptionName: EnvironmentType
-          Value: "SingleInstance"
-        - Namespace: aws:elasticbeanstalk:environment
           OptionName: ServiceRole
           Value: !Sub "arn:aws:iam::${AWS::AccountId}:role/LabRole"
         - Namespace: aws:autoscaling:launchconfiguration
           OptionName: IamInstanceProfile
           Value: !Sub "arn:aws:iam::${AWS::AccountId}:instance-profile/LabInstanceProfile"
-  LambdaFunction:
-    Type: "AWS::Lambda::Function"
-    Properties:
-      FunctionName: MyLambdaFunction
-      Runtime: nodejs14.x
-      Handler: lambda1.handler
-      Code:
-        S3Bucket: cloud-term-bucket
-        S3Key: lambda1.zip
-      Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/LabRole"
 
 Outputs:
   EnvironmentURL:
