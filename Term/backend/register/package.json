@@ -1,5 +1,5 @@
 {
-  "name": "lambda1",
+  "name": "register",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,6 +10,6 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.1409.0",
-    "cors": "^2.8.5"
+    "bcryptjs": "^2.4.3"
   }
 }
