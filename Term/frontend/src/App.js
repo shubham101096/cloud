@@ -1,10 +1,10 @@
-import Textract from "./Textract";
+import Analyser from "./Analyser";
 import Landing from "./Landing";
 
 function App() {
   return (
     <div className="App">
-   <Textract></Textract>
+   <Analyser></Analyser>
     </div>
   );
 }
