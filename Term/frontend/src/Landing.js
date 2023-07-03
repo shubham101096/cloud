@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button, Image } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 const LandingPage = () => {
@@ -17,14 +17,15 @@ const LandingPage = () => {
     <Container>
       <Row className="mt-5">
         <Col>
-          <Button variant="primary" size="lg" className="mr-3" onClick={handleRegister}>
+          <Button variant="primary" onClick={handleRegister}>
             Register
           </Button>
           <br></br>
           <br></br>
-          <Button variant="secondary" size="lg" onClick={handleLogin}>
+          <Button variant="secondary" onClick={handleLogin}>
             Login
           </Button>
+          <Image src="logo.png" alt="Image" fluid />
         </Col>
       </Row>
     </Container>

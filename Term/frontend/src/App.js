@@ -1,7 +1,7 @@
 import Analyser from "./Analyser";
 import Landing from "./Landing";
 import Routes from "./Routes";
-import { Navbar } from 'react-bootstrap';
+import { Navbar, Button } from 'react-bootstrap';
 
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
     <div className="App">
     <Navbar bg="dark" expand="lg">
       <Navbar.Brand style={{ marginLeft: '20px', fontSize: '24px', color: 'white' }}>
-        Image Analyser
+        <Button href="/" variant="info">Image Analyser</Button>
       </Navbar.Brand>
     </Navbar>
     <Routes>

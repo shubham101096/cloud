@@ -6,10 +6,10 @@ import { useNavigate } from "react-router-dom";
 
 const AWS_CONFIG = {
   region: "us-east-1",
-  accessKeyId: "ASIAS7PREEGHBVLEDJTL",
-  secretAccessKey: "D7Pi9cwFJJKrp2+YH0X/oJrSnATfnxPOf9N1cgh7",
+  accessKeyId: "ASIAS7PREEGHGANN4DUG",
+  secretAccessKey: "0uR+LiKdWiqKtrRSZr3wCgJpgFIRzwAhEfecFG+H",
   sessionToken:
-    "FwoGZXIvYXdzEH0aDLh1WJLdRWx9v1onoiLAAVD0f8fATpc70PktArUvEbEuofZiDMsM4CiqdQ8zG/t0xptthv93BjhaTj7MUfe5+a/GM+OSZaxQfooexQjWijiTjFal7mpDBo48rZXCo9gWHtyKKMg4K1/Uh3jAIAXTA1zKZoym2Xj/F/zBvREr2N8oWCo86XfJQXYISNK26nvT8lowuKDeVItwTYUWvQippsKIwtHdjyPLULE1FvctBnQy/mKPqjB1bo1tmnNxxsI2OV9n3cls9p5NhRyejhkTPCiFz4WlBjItfYgB24D7Fu+RGWNWxWb6CCliFSqNCuAAYcTtztw31SlVXPWtivdtpwCWmGUZ",
+    "FwoGZXIvYXdzEJ7//////////wEaDJo4VAMz6jsl3AFerCLAAVJPN4nsrazN6fWCcFkiW8/jRsx+aGNl8SKCVOimgfbZVqIWjn7NqB5jeycqdx8i3Oh6Xhbutjb4pnGkMsd4TOxxxgFwtSDiz36Q+BfRW9dIWQNT0H0WjkrWktWDxTFNbkm4DQyOU7F5nwW80gVkV9Ga2NJVSwMyiGrKcGaCHVZw2ODCNVjYKVilaMLRyGpt7VYsGyBGgZFmS1hPPfO79KmTBg/aoafEg2tS2dBrvB1Utk7W08ldYZPKvCeftEVWwCiX7IylBjItYrkqoWUl8OmHeAfRwoiT9aZlOr+97tMsXYOLPA/UOQkPIWj03V87Zd8YQrqo",
 };
 
 AWS.config.update(AWS_CONFIG);
