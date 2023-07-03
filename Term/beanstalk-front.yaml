@@ -1,10 +1,12 @@
 AWSTemplateFormatVersion: "2010-09-09"
+
 Resources:
   BeanstalkApplication:
     Type: "AWS::ElasticBeanstalk::Application"
     Properties:
       ApplicationName: EBS-T1
       Description: "AWS Elastic Beanstalk Application"
+
   BeanstalkApplicationVersion:
     Type: "AWS::ElasticBeanstalk::ApplicationVersion"
     Properties:
@@ -13,6 +15,7 @@ Resources:
       SourceBundle:
         S3Bucket: cloud-term-bucket
         S3Key: frontend.zip
+
   BeanstalkEnvironment:
     Type: "AWS::ElasticBeanstalk::Environment"
     Properties:
@@ -28,7 +31,29 @@ Resources:
           OptionName: IamInstanceProfile
           Value: !Sub "arn:aws:iam::${AWS::AccountId}:instance-profile/LabInstanceProfile"
 
+  CloudFrontDistribution:
+    Type: "AWS::CloudFront::Distribution"
+    Properties:
+      DistributionConfig:
+        Origins:
+          - DomainName: !GetAtt BeanstalkEnvironment.EndpointURL
+            Id: !Ref BeanstalkEnvironment
+            CustomOriginConfig:
+              HTTPPort: 80
+              HTTPSPort: 443
+              OriginProtocolPolicy: http-only
+        DefaultCacheBehavior:
+          TargetOriginId: !Ref BeanstalkEnvironment
+          ForwardedValues:
+            QueryString: false
+          ViewerProtocolPolicy: redirect-to-https
+        Enabled: true
+
 Outputs:
   EnvironmentURL:
     Description: "URL of the Elastic Beanstalk Environment"
     Value: !Sub "http://${BeanstalkEnvironment.EndpointURL}"
+
+  CloudFrontDistributionURL:
+    Description: "URL of the CloudFront distribution"
+    Value: !Sub "https://${CloudFrontDistribution.DomainName}"
