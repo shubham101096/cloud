@@ -8,7 +8,7 @@ app = Flask(__name__)
 def write_connector():
     try:
         connector = mysql.connector.connect(
-            host='database-1.cluster-cnm0ytgqucv9.us-east-1.rds.amazonaws.com',
+            host='database-network-2-instance-1.cnm0ytgqucv9.us-east-1.rds.amazonaws.com',
             user='admin',
             password='12345678',
             database='cloud_a3_db'
@@ -21,7 +21,7 @@ def write_connector():
 def read_connector():
     try:
         connector = mysql.connector.connect(
-            host='database-1.cluster-ro-cnm0ytgqucv9.us-east-1.rds.amazonaws.com',
+            host='database-network-2-instance-1.cnm0ytgqucv9.us-east-1.rds.amazonaws.com',
             user='admin',
             password='12345678',
             database='cloud_a3_db'
@@ -82,7 +82,7 @@ def list_products():
             product_list.append(product_dict)
 
         connector.close()
-        return json.dumps(product_list), 200
+        return json.dumps({'products': product_list}), 200
     except Exception as e:
         return {"message": str(e)}, 500
 
@@ -95,7 +95,7 @@ def default():
 @app.route('/create-table', methods=['POST'])
 def create_table():
     connector = mysql.connector.connect(
-        host='database-1.cluster-cnm0ytgqucv9.us-east-1.rds.amazonaws.com',
+        host='database-network-2-instance-1.cnm0ytgqucv9.us-east-1.rds.amazonaws.com',
         user='admin',
         password='12345678',
         database='cloud_a3_db'
@@ -118,5 +118,20 @@ def create_table():
     connector.close()
 
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=6009)
+@app.route('/delete', methods=['POST'])
+def delete_all_items():
+    connector = write_connector()
+    cursor = connector.cursor()
+
+    delete_query = "DELETE FROM products"
+
+    cursor.execute(delete_query)
+
+    connector.commit()
+    cursor.close()
+    connector.close()
+    return {"message": "deleted"}
+
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=80)
