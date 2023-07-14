@@ -1,15 +1,13 @@
 const bcrypt = require('bcryptjs');
 
 exports.handler = async (event) => {
-  const input_data = event.input;
-  const value = input_data.value;
+  console.log('event=', event)
+  const value = event.value;
   console.log("value=", value);
 
   const saltRounds = 10;
   const bcrypt_hash = await bcrypt.hash(value, saltRounds);
   console.log("bcrypt=", bcrypt_hash);
-
-  input_data.value = bcrypt_hash;
 
   const output = {
     banner: "B00917146",

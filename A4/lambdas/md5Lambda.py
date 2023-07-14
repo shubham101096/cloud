@@ -1,15 +1,11 @@
 import hashlib
 import json
 
-
 def lambda_handler(event, context):
-    input_data = event['input']
-    value = input_data['value']
+    value = event['value']
     print("value=", value)
     md5_hash = hashlib.md5(value.encode('utf-8')).hexdigest()
     print("md5=", md5_hash)
-
-    input_data['value'] = md5_hash
 
     output = {
         "banner": "B00917146",
