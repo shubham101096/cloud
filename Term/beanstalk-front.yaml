@@ -30,6 +30,15 @@ Resources:
         - Namespace: aws:autoscaling:launchconfiguration
           OptionName: IamInstanceProfile
           Value: !Sub "arn:aws:iam::${AWS::AccountId}:instance-profile/LabInstanceProfile"
+        - Namespace: aws:autoscaling:asg
+          OptionName: MinSize
+          Value: "1"
+        - Namespace: aws:autoscaling:asg
+          OptionName: MaxSize
+          Value: "3"
+        - Namespace: aws:autoscaling:launchconfiguration
+          OptionName: InstanceType
+          Value: "t3.small"
         # - Namespace: aws:elasticbeanstalk:application:environment
         #   OptionName: DOCKER_IMAGE
         #   Value: "shubhammishra10/elb:latest"
