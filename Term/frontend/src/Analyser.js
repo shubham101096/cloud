@@ -5,10 +5,10 @@ import { useNavigate } from "react-router-dom";
 
 const AWS_CONFIG = {
   region: "us-east-1",
-  accessKeyId: "ASIAS7PREEGHGANN4DUG",
-  secretAccessKey: "0uR+LiKdWiqKtrRSZr3wCgJpgFIRzwAhEfecFG+H",
+  accessKeyId: "ASIAS7PREEGHPJTKSUFW",
+  secretAccessKey: "X670wPo3d7gfZFsQ8KPYcx4gMFuqRzX8b4devR+3",
   sessionToken:
-    "FwoGZXIvYXdzEJ7//////////wEaDJo4VAMz6jsl3AFerCLAAVJPN4nsrazN6fWCcFkiW8/jRsx+aGNl8SKCVOimgfbZVqIWjn7NqB5jeycqdx8i3Oh6Xhbutjb4pnGkMsd4TOxxxgFwtSDiz36Q+BfRW9dIWQNT0H0WjkrWktWDxTFNbkm4DQyOU7F5nwW80gVkV9Ga2NJVSwMyiGrKcGaCHVZw2ODCNVjYKVilaMLRyGpt7VYsGyBGgZFmS1hPPfO79KmTBg/aoafEg2tS2dBrvB1Utk7W08ldYZPKvCeftEVWwCiX7IylBjItYrkqoWUl8OmHeAfRwoiT9aZlOr+97tMsXYOLPA/UOQkPIWj03V87Zd8YQrqo",
+    "FwoGZXIvYXdzELf//////////wEaDDPRDykyROCxyYlesyLAASfVImGMNdwSZhWLp6Sev03dX9klN7aWW2qEHySA++4e2nVYqCRy1OAjexA5vdlza7bp+T14PHYCm0aZ3O+dG+aT6p71QwLK2wxFN9PY94jooWHycOQ3N8XZsWTip1w8fI6aD4hz2R6Wad4ZZFXie1nLQwERgiuDzvVgQJUWLk4I+OHrEHVpZDKvAVgmRNUVT8iUuSPpdjLS9YY2Uh1m/hV/jgu+V4dh/SW0rVBNdMdWgsYzVtIhoKmuoeYQpqQD8CigvsqlBjItthSJiknd4Dq+dYYulOog41dce3MBJnMA2BogNbpq0EPPj+6eYmdBb3goUunC",
 };
 
 AWS.config.update(AWS_CONFIG);
@@ -134,6 +134,27 @@ const Analyser = () => {
     navigate('/register');
   };
 
+  const handleDownloadText = () => {
+    const element = document.createElement("a");
+    const file = new Blob([extractedText], { type: "text/plain" });
+    element.href = URL.createObjectURL(file);
+    element.download = "extractedText.txt";
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  };
+
+  const handleDownloadCSV = () => {
+    const element = document.createElement("a");
+    const csvContent = extractedObjects.split(",").join("\n");
+    const file = new Blob([csvContent], { type: "text/csv" });
+    element.href = URL.createObjectURL(file);
+    element.download = "extractedObjects.csv";
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  };
+
   return (
     <div>
     {isLoggedIn === false ?(
@@ -194,6 +215,9 @@ const Analyser = () => {
                 <div key={index}>{line}</div>
               ))}
             </div>
+            <Button variant="primary" onClick={handleDownloadText}>
+              Download Extracted Text (TXT)
+            </Button>
           </Col>
         </Row>
       )}
@@ -206,6 +230,9 @@ const Analyser = () => {
                 <div key={index}>{line}</div>
               ))}
             </div>
+            <Button variant="primary" onClick={handleDownloadCSV}>
+              Download Extracted Objects (CSV)
+            </Button>
           </Col>
         </Row>
       )}

@@ -25,7 +25,6 @@ const LandingPage = () => {
           <Button variant="secondary" onClick={handleLogin}>
             Login
           </Button>
-          <Image src="logo.png" alt="Image" fluid />
         </Col>
       </Row>
     </Container>
