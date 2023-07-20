@@ -5,6 +5,7 @@ import json
 
 def lambda_handler(event, context):
     value = event['value']
+    course_uri = event['course_uri']
     print("value=", value)
     sha256_hash = hashlib.sha256(value.encode('utf-8')).hexdigest()
     print("sha256=", sha256_hash)
@@ -17,15 +18,11 @@ def lambda_handler(event, context):
         "value": value
     }
 
-    # output_json = json.dumps(output)
+    response = requests.post(course_uri, data=output)
 
-    # endpoint_url = "/end"
-
-    # response = requests.post(endpoint_url, data=output_json)
-
-    # if response.status_code == 200:
-    #     print("POST request sent successfully")
-    # else:
-    #     print("Failed to send POST request:", response.text)
+    if response.status_code == 200:
+        print("POST request sent successfully")
+    else:
+        print("Failed to send POST request:", response.text)
 
     return output
