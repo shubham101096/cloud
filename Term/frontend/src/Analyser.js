@@ -4,16 +4,16 @@ import { Container, Row, Col, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 const AWS_CONFIG = {
-  region: "us-east-1",
-  accessKeyId: "ASIAS7PREEGHPJTKSUFW",
-  secretAccessKey: "X670wPo3d7gfZFsQ8KPYcx4gMFuqRzX8b4devR+3",
-  sessionToken:
-    "FwoGZXIvYXdzELf//////////wEaDDPRDykyROCxyYlesyLAASfVImGMNdwSZhWLp6Sev03dX9klN7aWW2qEHySA++4e2nVYqCRy1OAjexA5vdlza7bp+T14PHYCm0aZ3O+dG+aT6p71QwLK2wxFN9PY94jooWHycOQ3N8XZsWTip1w8fI6aD4hz2R6Wad4ZZFXie1nLQwERgiuDzvVgQJUWLk4I+OHrEHVpZDKvAVgmRNUVT8iUuSPpdjLS9YY2Uh1m/hV/jgu+V4dh/SW0rVBNdMdWgsYzVtIhoKmuoeYQpqQD8CigvsqlBjItthSJiknd4Dq+dYYulOog41dce3MBJnMA2BogNbpq0EPPj+6eYmdBb3goUunC",
+  region: process.env.REACT_APP_AWS_REGION,
+  accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
+  secretAccessKey: process.env.REACT_APP_AWS_SECRET_KEY,
+  sessionToken: process.env.REACT_APP_AWS_SESSION_TOKEN
 };
 
 AWS.config.update(AWS_CONFIG);
+const region = process.env.REACT_APP_AWS_REGION
 
-const lambda = new AWS.Lambda({ region: "us-east-1" });
+const lambda = new AWS.Lambda({ region });
 
 const Analyser = () => {
   const navigate = useNavigate();
