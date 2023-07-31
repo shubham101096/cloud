@@ -1,0 +1,139 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Resources:
+  UsersTable:
+    Type: "AWS::DynamoDB::Table"
+    DeletionPolicy: Retain
+    Properties:
+      TableName: "users"
+      AttributeDefinitions:
+        - AttributeName: email
+          AttributeType: S
+      KeySchema:
+        - AttributeName: email
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+  LambdaFunctionRegister:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      FunctionName: register
+      Runtime: nodejs14.x
+      Handler: register.handler
+      Code:
+        S3Bucket: cloud-term-bucket
+        S3Key: register.zip
+      Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/LabRole"
+  
+  LambdaFunctionLogin:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      FunctionName: login
+      Runtime: nodejs14.x
+      Handler: login.handler
+      Code:
+        S3Bucket: cloud-term-bucket
+        S3Key: login.zip
+      Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/LabRole"
+
+  LambdaFunctionTextract:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      FunctionName: textract
+      Runtime: nodejs14.x
+      Handler: textract.handler
+      Code:
+        S3Bucket: cloud-term-bucket
+        S3Key: textract.zip
+      Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/LabRole"
+  
+  LambdaFunctionRekognition:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      FunctionName: rekognition
+      Runtime: nodejs14.x
+      Handler: rekognition.handler
+      Code:
+        S3Bucket: cloud-term-bucket
+        S3Key: rekognition.zip
+      Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/LabRole"
+
+
+  BeanstalkApplication:
+    Type: "AWS::ElasticBeanstalk::Application"
+    Properties:
+      ApplicationName: IMAGE-ANALYSER
+      Description: "AWS Elastic Beanstalk Application"
+
+  BeanstalkApplicationVersion:
+    Type: "AWS::ElasticBeanstalk::ApplicationVersion"
+    Properties:
+      ApplicationName: !Ref BeanstalkApplication
+      Description: "Application Version 1.0"
+      SourceBundle:
+        S3Bucket: cloud-term-bucket
+        S3Key: frontend.zip
+
+  BeanstalkEnvironment:
+    Type: "AWS::ElasticBeanstalk::Environment"
+    Properties:
+      ApplicationName: !Ref BeanstalkApplication
+      Description: "Elastic Beanstalk Environment"
+      VersionLabel: !Ref BeanstalkApplicationVersion
+      SolutionStackName: "64bit Amazon Linux 2 v3.5.9 running Docker"
+      OptionSettings:
+        - Namespace: aws:elasticbeanstalk:environment
+          OptionName: ServiceRole
+          Value: !Sub "arn:aws:iam::${AWS::AccountId}:role/LabRole"
+        - Namespace: aws:autoscaling:launchconfiguration
+          OptionName: IamInstanceProfile
+          Value: !Sub "arn:aws:iam::${AWS::AccountId}:instance-profile/LabInstanceProfile"
+        - Namespace: aws:autoscaling:asg
+          OptionName: MinSize
+          Value: "5"
+        - Namespace: aws:autoscaling:asg
+          OptionName: MaxSize
+          Value: "10"
+        - Namespace: aws:autoscaling:launchconfiguration
+          OptionName: InstanceType
+          Value: "t3.small"
+        - Namespace: aws:elasticbeanstalk:application:environment
+          OptionName: REACT_APP_AWS_ACCESS_KEY
+          Value: ASIAS7PREEGHERECOU66
+        - Namespace: aws:elasticbeanstalk:application:environment
+          OptionName: REACT_APP_AWS_SECRET_KEY
+          Value: T8T3hNjYGMppHaeb/ih7lQ9e3bbNU7UP+0g5akPh
+        - Namespace: aws:elasticbeanstalk:application:environment
+          OptionName: REACT_APP_AWS_SESSION_TOKEN
+          Value: FwoGZXIvYXdzENz//////////wEaDD1ygkenHpKaPUb/GCLAAaNCoRitIdySheR6THFsmBDwzLC51j8cNs8/RT5zAXpNpU6XyMaxWvBOozqQKveyktxzidvq+coEhNlToEdvcyryZfggt/sMiLb6DvwHja6LLfi0oCbf3VTltixaFVEhhul+ofrfF4e7d/jYJ1rXwpjgFdB/OSM9piPm8+1cRVjg2Yj06xoDVMJ16rwRg48mEYvK3ZgyKmm+ZxgGvuK+GLacJ5BC00C0Sft+ZTpxliJG66ca/Jd1DSZJXfbkcsN23yjS+4qmBjItLPDhoOzhhZBmPk2vf4nndRz8rif4UBHy+sdlXND/9NtOqAzqMKC6ok6P+jmH
+        - Namespace: aws:elasticbeanstalk:application:environment
+          OptionName: REACT_APP_AWS_REGION
+          Value: us-east-1
+  CloudFrontDistribution:
+    Type: "AWS::CloudFront::Distribution"
+    Properties:
+      DistributionConfig:
+        Origins:
+          - DomainName: !GetAtt BeanstalkEnvironment.EndpointURL
+            Id: !Ref BeanstalkEnvironment
+            CustomOriginConfig:
+              HTTPPort: 80
+              HTTPSPort: 443
+              OriginProtocolPolicy: http-only
+        DefaultCacheBehavior:
+          TargetOriginId: !Ref BeanstalkEnvironment
+          ForwardedValues:
+            QueryString: false
+          ViewerProtocolPolicy: redirect-to-https
+        Enabled: true
+
+Outputs:
+  EnvironmentURL:
+    Description: "URL of the Elastic Beanstalk Environment"
+    Value: !Sub "http://${BeanstalkEnvironment.EndpointURL}"
+
+  CloudFrontDistributionURL:
+    Description: "URL of the CloudFront distribution"
+    Value: !Sub "https://${CloudFrontDistribution.DomainName}"
