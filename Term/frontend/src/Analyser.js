@@ -23,7 +23,6 @@ const Analyser = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [extractedText, setExtractedText] = useState("");
   const [extractedObjects, setExtractedObjects] = useState("");
-  const [modifiedText, setModifiedText] = useState("");
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -101,24 +100,6 @@ const Analyser = () => {
     };
 
     reader.readAsDataURL(selectedImage);
-  };
-
-  const callComprehendLambda = async () => {
-    console.log("callComprehendLambda");
-    try {
-      const params = {
-        FunctionName: "comprehend",
-        Payload: JSON.stringify({ text: extractedText }),
-      };
-
-      const modifiedResponse = await lambda.invoke(params).promise();
-
-      const modifiedText = JSON.parse(modifiedResponse.Payload).body;
-      setModifiedText(modifiedText);
-      console.log("callComprehendLambda---------");
-    } catch (error) {
-      console.error("Error:", error);
-    }
   };
 
   const handleLogout = async () => {
@@ -200,11 +181,6 @@ const Analyser = () => {
             Extract objects
           </Button>
         </Col>
-        {/* <Col>
-          <Button variant="primary" onClick={callComprehendLambda}>
-            Remove sensitive Text
-          </Button>
-        </Col> */}
       </Row>
       {extractedText && (
         <Row className="mb-3">
@@ -233,13 +209,6 @@ const Analyser = () => {
             <Button variant="primary" onClick={handleDownloadCSV}>
               Download Extracted Objects (CSV)
             </Button>
-          </Col>
-        </Row>
-      )}
-      {modifiedText && (
-        <Row className="mb-3">
-          <Col>
-            <div>Modified Text: {modifiedText}</div>
           </Col>
         </Row>
       )}

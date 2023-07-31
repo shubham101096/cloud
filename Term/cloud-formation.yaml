@@ -101,13 +101,13 @@ Resources:
           Value: "t3.small"
         - Namespace: aws:elasticbeanstalk:application:environment
           OptionName: REACT_APP_AWS_ACCESS_KEY
-          Value: ASIAS7PREEGHCZWFFJCH
+          Value: ASIAS7PREEGHERECOU66
         - Namespace: aws:elasticbeanstalk:application:environment
           OptionName: REACT_APP_AWS_SECRET_KEY
-          Value: 0UFn30seLtQ8TIY0oiw2ljR2//ru4H3XXQnWAB33
+          Value: T8T3hNjYGMppHaeb/ih7lQ9e3bbNU7UP+0g5akPh
         - Namespace: aws:elasticbeanstalk:application:environment
           OptionName: REACT_APP_AWS_SESSION_TOKEN
-          Value: FwoGZXIvYXdzEEwaDCzxacWPQr6dmgVNxCLAAd04DGmEiFDnZ+VpehxYNqA6vCRGLYrpkuA4nur+zJSGfxPpPW24s5UgBxEWFTFRWAtHwlDZf+44qE3KJTR+uvA/+BDUoT7JWX3EC12aZsyM21hGjIwVr+HmOyZuw2rAbCWmskrlVw1vR/jpkRUX/rNNXF14qnLImW2FybsL+hnAz6ZdOGEuZgTHT8Q/jPu24D+H5RY3odAfiguWXDG6uavSQFwf+dVb1p87OW3tBODscb36JC/k57QaL8uNqOOgNSikm+ulBjIthHntgheaban74t7VPZMSiFth5oqZ4pdER7GqD0CmqPcA2KS/gGPH48zxRYPb
+          Value: FwoGZXIvYXdzENz//////////wEaDD1ygkenHpKaPUb/GCLAAaNCoRitIdySheR6THFsmBDwzLC51j8cNs8/RT5zAXpNpU6XyMaxWvBOozqQKveyktxzidvq+coEhNlToEdvcyryZfggt/sMiLb6DvwHja6LLfi0oCbf3VTltixaFVEhhul+ofrfF4e7d/jYJ1rXwpjgFdB/OSM9piPm8+1cRVjg2Yj06xoDVMJ16rwRg48mEYvK3ZgyKmm+ZxgGvuK+GLacJ5BC00C0Sft+ZTpxliJG66ca/Jd1DSZJXfbkcsN23yjS+4qmBjItLPDhoOzhhZBmPk2vf4nndRz8rif4UBHy+sdlXND/9NtOqAzqMKC6ok6P+jmH
         - Namespace: aws:elasticbeanstalk:application:environment
           OptionName: REACT_APP_AWS_REGION
           Value: us-east-1
